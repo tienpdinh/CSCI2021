@@ -1,0 +1,353 @@
+			   __________________
+
+			    LAB 01 QUESTIONS
+			   __________________
+
+
+- Name: (FILL THIS in)
+- NetID: (THE kauf0095 IN kauf0095@umn.edu)
+
+Answer the questions below according to the lab specification. Write
+your answers directly in this text file and submit it to complete the
+lab.
+
+
+PROBLEM 1 `age.c'
+=================
+
+A
+~
+
+  Examine the source code for `age.c'. Compile it using the following
+  invocation of `gcc'
+  ,----
+  | gcc age.c
+  `----
+  This should create the executable `a.out'. Run this program using the
+  invocation.
+  ,----
+  | ./a.out
+  `----
+  Perform several runs of the program with the following values and
+  paste your output in the space below.
+  - Enter 16
+  - Enter 18
+  - Enter 25
+  - Enter 44
+
+
+Solution                                                      :solution:
+--------
+
+  ,----
+  | > a.out 
+  | Enter your age in years: 
+  | 16
+  | You are 8409600 minutes old.
+  | You're too young to anything fun.
+  | > a.out 
+  | Enter your age in years: 
+  | 18
+  | You are 9460800 minutes old.
+  | You can vote but cannot legally imbibe alcohol.
+  | I bet that hasn't stopped you from trying though...
+  | > a.out 
+  | Enter your age in years: 
+  | 25
+  | You are 13140000 minutes old.
+  | You may imbibe alcohol but cannot be president
+  | > a.out
+  | Enter your age in years: 
+  | 44
+  | You are 23126400 minutes old.
+  | You may imbibe alcohol but cannot be president
+  `----
+
+
+B
+~
+
+  Analyze the code for `age.c' and describe a flaw in the conditional
+  structure towards the end that prevents the output:
+  ,----
+  | You can vote, drink, and be president.
+  | Try all three at once!
+  `----
+  from being printed.
+
+  Alter the code to fix this bug so that for ages 35 and larger, the
+  above text is printed. Paste your fixed code for the conditional below
+  and test it by recompiling and showing a demo run.
+
+
+Solution                                                      :solution:
+--------
+
+  The code as is
+  ,----
+  | else if( age_years >= 21 ){
+  |   printf("You may imbibe alcohol but cannot be president\n");
+  | }
+  | else {                        // does this print?
+  |   printf("You can vote, drink, and be president.\nTry all three at once!\n");
+  | }
+  `----
+  will always fall into the case of 21+ for any age 21 or greater. This
+  can be fixed by limiting it to the range of 21-34 as below:
+  ,----
+  | else if( age_years >= 21 && age_years < 35 ){
+  |   printf("You may imbibe alcohol but cannot be president\n");
+  | }
+  | else {                        // does this print?
+  |   printf("You can vote, drink, and be president.\nTry all three at once!\n");
+  | }
+  `----
+
+  Demo runs:
+  ,----
+  | > gcc age_fixed.c
+  | > a.out
+  | Enter your age in years: 
+  | 35
+  | You are 35 years and 18396000 minutes old.
+  | You can vote, drink, and be president.
+  | Try all three at once!
+  | > a.out
+  | Enter your age in years: 
+  | 44
+  | You are 44 years and 23126400 minutes old.
+  | You can vote, drink, and be president.
+  | Try all three at once!
+  `----
+
+
+C
+~
+
+  Attempt to enter some absurd ages for the age computation.
+  - Enter 5000
+  - Enter -5000
+  Describe anything strange that seems to be happening based your
+  understanding of how basic arithmetic is supposed to work.
+
+  If you happen to know WHY this strangeness is happening, describe it
+  below.  If not, you will find out soon.
+
+
+Solution                                                      :solution:
+--------
+
+  For 5000 years, one would expect a positive age in minutes but the
+  result is
+  ,----
+  | > a.out
+  | Enter your age in years: 
+  | 5000
+  | You are -1666967296 minutes old.
+  `----
+  which is negative.
+
+  For -5000 years, one would expect a negative age in minutes but the
+  result is
+  ,----
+  | > a.out
+  | Enter your age in years: 
+  | -5000
+  | You are 1666967296 minutes old.
+  `----
+  which is positive.
+
+  Both are a result of overflowing the integer type.
+
+
+D
+~
+
+  Describe which function is used to print information to the screen.
+  Describe how it seems to work to substitute values into output and
+  what *format specifier* indicates an integer should be substituted.
+
+
+Solution                                                      :solution:
+--------
+
+  ,----
+  | printf("You are %d years and %d minutes old.\n",
+  |        age_years, age_minutes);
+  `----
+  `printf()' produces output to the screen. It takes a string with
+  format specifiers to substitute into it. Each format specifier starts
+  with a % sign and %d means to substitute and integer. Additional
+  arguments to `printf()' are then substituted into the positions of the
+  format specifiers.
+
+
+E
+~
+
+  Describe what function is used to read typed input interactively from
+  a user in the `age.c' program.  Describe anything that seems strange
+  about this function or its arguments.
+
+  We will learn in not long why this bit of strangeness is necessary.
+
+
+Solution                                                      :solution:
+--------
+
+  ,----
+  | scanf("%d", &age_years);
+  `----
+  This invocation is a bit strange as the argument `age_years' is passed
+  in the ampersand &.
+
+  Later we will learn this means to pass the *address* of the variable
+  in rather than its value so that that memory cell can be set by
+  `scanf()'.
+
+
+PROBLEM 2 Collatz
+=================
+
+A
+~
+
+  Examine and compile the code associated with the collatz
+  program. There are three files associated with this program.
+  - `collatz_funcs.c' which defines two utility functions for computing
+    the Collatz sequence
+  - `collatz_main.c' which defines a `main()' function to compute a
+    Collatz sequence
+  - `collatz.h' header file which declares functions in
+    `collatz_funcs.c' so that they are known to `collatz_main.c'
+
+  To compile the program, use the following invocation of `gcc'
+  ,----
+  | gcc -o collatz collatz_funcs.c collatz_main.c
+  `----
+  This should create the program `collatz' which can be run with
+  ,----
+  | ./collatz
+  `----
+
+  Do so and enter inputs
+  - Starting integer 7
+  - Show output: 1
+
+  Paste the output below.
+
+
+Solution                                                      :solution:
+--------
+
+  ,----
+  | > gcc -o collatz collatz_funcs.c collatz_main.c
+  | > ./collatz
+  | Enter the starting integer: 7
+  | The next value in the Collatz sequence is 22
+  | Show output of steps (0:NO, any other int: yes): 1
+  | Step 0: 7
+  | Step 1: 22
+  | Step 2: 11
+  | Step 3: 34
+  | Step 4: 17
+  | Step 5: 52
+  | Step 6: 26
+  | Step 7: 13
+  | Step 8: 40
+  | Step 9: 20
+  | Step 10: 10
+  | Step 11: 5
+  | Step 12: 16
+  | Step 13: 8
+  | Step 14: 4
+  | Step 15: 2
+  | Step 16: 1
+  | The starting value 7 converged to 1 in 16 steps
+  `----
+
+
+B
+~
+
+  Determine what the "dash-O" option used above for `gcc -o' does. For
+  example, what happens if one runs
+  ,----
+  | gcc -o GLIPGLOP collatz_funcs.c collatz_main.c
+  `----
+  instead.  You may wish to use the `ls' command to list the files in
+  the current directory.
+
+  Describe what happens if you omit this option `-o' when compiling as
+  in
+  ,----
+  | gcc collatz_funcs.c collatz_main.c
+  `----
+
+
+Solution                                                      :solution:
+--------
+
+  This option controls the name of the output program so that `gcc -o
+  GLIPGLOP' will produce an output program named `GLIPGLOP' rather than
+  `collatz' which can be run with
+  ,----
+  | ./GLIPGLOP
+  `----
+  and will do the same thing.
+
+  Omitting `-o' creates a program named the default which is `a.out' on
+  Unix systems.
+
+
+C
+~
+
+  Attempt to compile only the file `collatz_main.c' by doing
+  ,----
+  | gcc -o something collatz_main.c
+  `----
+
+  This should result in an error. Show the output of that error and
+  determine why the compilation fails.
+
+
+Solution                                                      :solution:
+--------
+
+  ,----
+  | gcc -o something collatz_main.c 
+  | /tmp/cca2SGJa.o: In function `main':
+  | collatz_main.c:(.text+0x4d): undefined reference to `collatz_next'
+  | collatz_main.c:(.text+0x9e): undefined reference to `collatz_steps'
+  | collect2: error: ld returned 1 exit status
+  `----
+
+  Two functions are used in `main()' which are not part of the
+  compilation so the program cannot be compiled.
+
+
+D
+~
+
+  Attempt to compile only the file `collatz_funcs.c' by doing
+  ,----
+  | gcc -o something collatz_funcs.c
+  `----
+
+  This should result in an error. Show the output of that error and
+  determine why the compilation fails.
+
+
+Solution                                                      :solution:
+--------
+
+  ,----
+  | > gcc -o something collatz_funcs.c 
+  | /usr/lib/gcc/x86_64-pc-linux-gnu/7.2.1/../../../../lib/Scrt1.o: In function `_start':
+  | (.text+0x20): undefined reference to `main'
+  | collect2: error: ld returned 1 exit status
+  `----
+
+  Every C program needs a `main()' function and there is none in
+  `collatz_funcs.c'

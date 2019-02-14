@@ -1,0 +1,16 @@
+insert rolf
+insert kermit
+insert fozzy
+insert ms_piggy
+get 2
+get 7
+print
+insert animal
+insert skeeter
+insert dr_teeth
+print
+get 7
+contains kermit
+contains scooter
+contains animal
+exit
