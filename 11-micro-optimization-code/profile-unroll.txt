@@ -1,0 +1,48 @@
+# Compile
+# -pg : instrument code for profiling
+# -no-pie : bug fix for new-ish gcc's
+> gcc -pg -no-pie -g -Og -o unroll unroll.c
+
+> ls
+unroll  unroll.c
+
+> ./unroll 1000000000
+sum_rangeA: 2.9401e-01 secs
+sum_rangeB: 5.3164e-01 secs
+sum_rangeC: 2.6574e-01 secs
+
+# gmon.out now created with timing info
+> ls
+gmon.out  unroll  unroll.c  
+
+> file gmon.out
+gmon.out: GNU prof performance data - version 1
+
+> gprof -b unroll
+Flat profile:
+
+Each sample counts as 0.01 seconds.
+  %   cumulative   self              self     total           
+ time   seconds   seconds    calls  ms/call  ms/call  name    
+ 50.38      0.54     0.54        1   544.06   544.06  sum_rangeB
+ 26.12      0.83     0.28        1   282.11   282.11  sum_rangeA
+ 24.26      1.09     0.26        1   261.95   261.95  sum_rangeC
+
+			Call graph
+granularity: each sample hit covers 2 byte(s) for 0.92% of 1.09 seconds
+
+index % time    self  children    called     name
+[1]    100.0    0.00    1.09                 main [1]
+                0.54    0.00       1/1           sum_rangeB [2]
+                0.28    0.00       1/1           sum_rangeA [3]
+                0.26    0.00       1/1           sum_rangeC [4]
+-----------------------------------------------
+                0.54    0.00       1/1           main [1]
+[2]     50.0    0.54    0.00       1         sum_rangeB [2]
+-----------------------------------------------
+                0.28    0.00       1/1           main [1]
+[3]     25.9    0.28    0.00       1         sum_rangeA [3]
+-----------------------------------------------
+                0.26    0.00       1/1           main [1]
+[4]     24.1    0.26    0.00       1         sum_rangeC [4]
+-----------------------------------------------
