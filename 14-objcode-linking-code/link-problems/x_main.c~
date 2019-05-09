@@ -1,0 +1,13 @@
+// FILE: xy_main.c
+#include <stdio.h>
+#include "x_to_neg8.h"
+// defines that there will be an x and an x_to_neg8() function
+
+int y = 0;
+
+int main(){
+  x_to_neg8();  // set x 
+  printf("x: %d\n",x);
+  printf("y: %d\n",y);
+  return 0;
+}

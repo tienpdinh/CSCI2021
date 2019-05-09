@@ -1,0 +1,19 @@
+// FILE: xy_int.c
+int x;        // global vars
+int y;
+
+void x_y_to_pos2(){
+  x=2;            // set global vars
+  y=2;
+}
+
+void x_to_neg8(); // in different .o
+
+#include <stdio.h>
+int main(){
+  x_y_to_pos2();  // set globals
+  x_to_neg8();    // set x only
+  printf("x: %d\n",x);
+  printf("y: %d\n",y);
+  return 0;
+}

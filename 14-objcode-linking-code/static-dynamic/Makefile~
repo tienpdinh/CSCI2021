@@ -1,0 +1,11 @@
+all : hello_static hello_dynamic
+
+hello_static : hello.c
+	gcc -o hello_static -static hello.c
+
+hello_dynamic : hello.c
+	gcc -o hello_dynamic hello.c
+
+clean : 
+	rm -f *.o hello_*
+

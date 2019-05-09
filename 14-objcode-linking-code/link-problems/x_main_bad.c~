@@ -1,0 +1,20 @@
+// FILE: xy_main.c
+#include <stdio.h>
+#include "x_to_neg8.h"
+// defines that there will be an x and an x_to_neg8() function
+
+int y = 0;
+
+void x_pos2(){
+  x=2;            // set global vars
+  y=2;
+}
+
+
+int main(){
+  x_y_to_pos2();  // set globals
+  x_to_neg8();    // set x only
+  printf("x: %d\n",x);
+  printf("y: %d\n",y);
+  return 0;
+}

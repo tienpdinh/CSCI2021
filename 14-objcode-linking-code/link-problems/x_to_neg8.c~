@@ -1,0 +1,6 @@
+// FILE: x_long_header.c
+long x;      // actual global var definition
+
+void x_to_neg8(){
+  x = -8;    // set global var
+}
